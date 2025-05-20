@@ -1,19 +1,62 @@
 import { useState } from "react";
 import Perks from "./Perks";
+import axios from "axios";
+import { Navigate } from "react-router-dom";
+import { useUserContext } from "../contexts/UserContext";
 
 const NewPlace = () => {
+  const { user } = useUserContext();
   const [title, setTitle] = useState("");
   const [city, setCity] = useState("");
+  const [photos, setPhotos] = useState([]);
+  const [perks, setPerks] = useState([]);
   const [description, setDescription] = useState("");
   const [extras, setExtras] = useState("");
   const [price, setPrice] = useState("");
   const [checkin, setCheckin] = useState("");
   const [checkout, setCheckout] = useState("");
   const [guests, setGuests] = useState("");
+  const [redirect, setRedirect] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (
+      title &&
+      city &&
+      description &&
+      price &&
+      checkin &&
+      checkout &&
+      guests
+    ) {
+    } else {
+      alert("Preencha todas as informações!");
+    }
+
+    try {
+      const newPlace = await axios.post("/places", {
+        owner: user._id,
+        title,
+        city,
+        photos,
+        description,
+        extras,
+        perks,
+        price,
+        checkin,
+        checkout,
+        guests,
+      });
+      console.log(newPlace);
+      setRedirect(true);
+    } catch (error) {
+      console.error(JSON.stringify(error));
+      alert("Erro ao criar um novo lugar");
+    }
   };
+
+  redirect && <Navigate to="/account/places" />;
 
   return (
     <form onSubmit={handleSubmit} className="flex w-full flex-col gap-6 px-8">
@@ -63,7 +106,7 @@ const NewPlace = () => {
           Comodidades
         </label>
 
-        <Perks />
+        <Perks perks={perks} setPerks={setPerks} />
       </div>
 
       <div className="flex flex-col gap-1">
