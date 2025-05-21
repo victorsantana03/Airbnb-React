@@ -3,6 +3,7 @@ import Perks from "./Perks";
 import axios from "axios";
 import { Navigate } from "react-router-dom";
 import { useUserContext } from "../contexts/UserContext";
+import PhotoUploader from "./PhotoUploader";
 
 const NewPlace = () => {
   const { user } = useUserContext();
@@ -17,6 +18,7 @@ const NewPlace = () => {
   const [checkout, setCheckout] = useState("");
   const [guests, setGuests] = useState("");
   const [redirect, setRedirect] = useState(false);
+  const [photoLink, setPhotoLink] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -87,6 +89,8 @@ const NewPlace = () => {
           onChange={(e) => setCity(e.target.value)}
         />
       </div>
+
+      <PhotoUploader {...{ photoLink, setPhotoLink, setPhotos, photos }} />
 
       <div className="flex flex-col gap-1">
         <label htmlFor="description" className="ml-2 text-2xl font-bold">

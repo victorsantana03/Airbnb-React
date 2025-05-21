@@ -1,11 +1,10 @@
 import express from "express";
-import "dotenv/config";
 import cors from "cors";
-import UserRoutes from "./domains/users/routes.js";
-import PlaceRoutes from "./domains/places/routes.js";
 import cookieParser from "cookie-parser";
+import routes from "./routes/index.js";
 
-const app = express();
+export const app = express();
+
 app.use(express.json());
 app.use(cookieParser());
 app.use(
@@ -15,11 +14,4 @@ app.use(
   })
 );
 
-const { PORT } = process.env;
-
-app.use("/", UserRoutes);
-app.use("/", PlaceRoutes);
-
-app.listen(PORT, () => {
-  console.log(`App na porta ${PORT}`);
-});
+app.use(routes);

@@ -3,6 +3,7 @@ import express from "express";
 import { JWTVerify } from "../../utils/jwt.js";
 import { connectDb } from "../../config/db.js";
 import { dowloadImage } from "../../utils/imageDowloader.js";
+import { _dirname } from "../../index.js";
 
 const router = express.Router();
 
@@ -45,10 +46,15 @@ router.post("/places", async (req, res) => {
   }
 });
 
-router.post("/upload/link", async (req, res) => {
+router.post("/places/upload/link", async (req, res) => {
   const { link } = req.body;
 
-  await dowloadImage(link);
+  try {
+    const filename = await dowloadImage(link, `${_dirname}/tmp/`);
+    res.json(filename);
+  } catch (error) {
+    res.status(500).json("Deu erro ao baixar a imagem.");
+  }
 });
 
 export default router;
